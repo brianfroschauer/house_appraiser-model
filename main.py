@@ -2,16 +2,11 @@ from flask import Flask, jsonify, request
 
 # Data analysis modules
 import pandas as pd
-import numpy as np
-
-# Visualization modules
-import seaborn as sns
 
 from sklearn.model_selection import train_test_split
 
 # Fit model modules
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import classification_report
 
 app = Flask(__name__)
 
@@ -33,14 +28,14 @@ def linear_regression():
 
     prediction = model.predict(feature)[0]
 
-    return '$' + str(round(prediction))
+    return jsonify(price=round(prediction))
 
 
 def train_model():
     train = pd.read_csv('./dataset/dataset.csv')
 
-    # Split dataset into “X” features and “y” labels
-    X = train[[
+    # Split dataset into “x” features and “y” labels
+    x = train[[
         'total_surface',
         'covered_surface',
         'rooms',
@@ -53,7 +48,7 @@ def train_model():
 
     y = train['price']
 
-    x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1)
+    x_train, x_test, y_train, y_test = train_test_split(x, y)
 
     # Create instance of LogisticRegression
     model = LinearRegression()
