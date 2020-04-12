@@ -10,6 +10,8 @@ from sklearn.linear_model import LinearRegression
 
 app = Flask(__name__)
 
+zone_dict = {}
+
 
 @app.route('/predict', methods=['POST'])
 def linear_regression():
@@ -23,8 +25,9 @@ def linear_regression():
     bedrooms = request.json['bedrooms']
     toilettes = request.json['toilettes']
     antiquity = request.json['antiquity']
+    zone = zone_dict.get(request.json['zone'])
 
-    feature = [[total_surface, covered_surface, rooms, bathrooms, garages, bedrooms, toilettes, antiquity]]
+    feature = [[total_surface, covered_surface, rooms, bathrooms, garages, bedrooms, toilettes, antiquity, zone]]
 
     prediction = model.predict(feature)[0]
 
@@ -33,6 +36,8 @@ def linear_regression():
 
 def train_model():
     train = pd.read_csv('./dataset/dataset.csv')
+
+    init_zone_dict(train)
 
     # Split dataset into “x” features and “y” labels
     x = train[[
@@ -43,7 +48,8 @@ def train_model():
         'garages',
         'bedrooms',
         'toilettes',
-        'antiquity'
+        'antiquity',
+        'zone_label'
     ]]
 
     y = train['price']
@@ -59,3 +65,8 @@ def train_model():
     model.fit(x_train, y_train)
 
     return model
+
+
+def init_zone_dict(train):
+    for i in range(len(train)):
+        zone_dict[train['zone'][i]] = train['zone_label'][i]
