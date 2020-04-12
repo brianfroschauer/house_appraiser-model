@@ -27,6 +27,9 @@ def linear_regression():
     antiquity = request.json['antiquity']
     zone = zone_dict.get(request.json['zone'])
 
+    if zone is None:
+        return jsonify(error="Zone, " + request.json['zone'] + ", is not found")
+
     feature = [[total_surface, covered_surface, rooms, bathrooms, garages, bedrooms, toilettes, antiquity, zone]]
 
     prediction = model.predict(feature)[0]
