@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 
 # Data analysis modules
 import pandas as pd
+from flask_cors import CORS
 
 from sklearn.model_selection import train_test_split
 
@@ -9,6 +10,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 
 app = Flask(__name__)
+CORS(app)
 
 zone_dict = {}
 
