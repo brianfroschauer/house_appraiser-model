@@ -70,11 +70,11 @@ Response example:
 [
   {
 	"total_surface": 400,
-	"average_price": 500.000
+	"average_price": 500000
   },
   {
 	"total_surface": 500,
-	"average_price": 600.000
+	"average_price": 600000
   }
 ]
 ```
@@ -115,11 +115,31 @@ Response example:
 [
   {
     "zone": "Pilar",
-	"average_price": 150.000
+	"average_price": 150000
   },
   {
     "zone": "Nordelta",
-	"average_price": 300.000
+	"average_price": 300000
+  }
+]
+```
+
+#### Average price by bathrooms amount
+
+Method: GET
+
+URL: http://127.0.0.1:5000/prices/by-bathrooms
+
+Response example:
+```json
+[
+  {
+    "bathrooms": 1,
+	"average_price": 150000
+  },
+  {
+    "zone": 3,
+	"average_price": 300000
   }
 ]
 ```
