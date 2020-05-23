@@ -35,6 +35,12 @@ Payload:
     "zone": "Pilar"
 }
 ```
+Response example:
+```json
+{
+  "price": 500000
+}
+```
 
 #### Get price in function of the total or covered surface
 
@@ -45,7 +51,7 @@ URL: http://127.0.0.1:5000/prices
 Params:
 1. surface: ['covered', 'total']
 
-Payload:
+Response example:
 ```json
 [
   {
@@ -68,7 +74,7 @@ URL: http://127.0.0.1:5000/houses
 Params:
 1. zone: zone string
 
-Payload:
+Response example:
 ```json
 [
   {
@@ -93,7 +99,7 @@ Params:
 1. range: ['asc', 'desc']
 2. top: number
 
-Payload:
+Response example:
 ```json
 [
   {
