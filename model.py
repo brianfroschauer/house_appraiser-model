@@ -67,9 +67,52 @@ def price_by_total_surface(surface):
          'index',
          ], axis=1)
 
-    print('ordered_data')
-    print(ordered_data)
-
     grouped_data = ordered_data.groupby([surface]).mean().reset_index()
 
     return list(map(tuple, grouped_data.to_numpy()))
+
+
+def houses_by_zone(zone):
+    if find_zone(zone) is None:
+        return 0
+
+    ordered_data = data.sort_values(by=['zone'])
+
+    ordered_data = ordered_data.drop(
+        ['covered_surface',
+         'total_surface',
+         'rooms',
+         'bathrooms',
+         'garages',
+         'bedrooms',
+         'toilettes',
+         'antiquity',
+         'zone_label',
+         'index',
+         ], axis=1)
+
+    return ordered_data['zone'].value_counts().to_dict().get(zone)
+
+
+def avg_price_by_zone(range, top):
+
+    ordered_data = data.sort_values(by=['zone'])
+
+    ordered_data = ordered_data.drop(
+        ['covered_surface',
+         'total_surface',
+         'rooms',
+         'bathrooms',
+         'garages',
+         'bedrooms',
+         'toilettes',
+         'antiquity',
+         'zone_label',
+         'index',
+         ], axis=1)
+
+    ordered_data = ordered_data.groupby(['zone']).mean().reset_index()
+    ordered_data['price'] = ordered_data['price'].astype(int)
+    ordered_data = ordered_data.sort_values(by='price', ascending=False if range == 'asc' else True).head(top)
+
+    return [tuple(x) for x in ordered_data.to_numpy()]
