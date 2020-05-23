@@ -42,6 +42,20 @@ Response example:
 }
 ```
 
+#### Get all zones
+Method: GET
+
+URL: http://127.0.0.1:5000/zones
+
+Response example:
+```json
+[
+  "Pilar",
+  "Nordelta",
+  "San Isidro"
+]
+```
+
 #### Get price in function of the total or covered surface
 
 Method: GET
