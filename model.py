@@ -72,10 +72,7 @@ def price_by_total_surface(surface):
     return list(map(tuple, grouped_data.to_numpy()))
 
 
-def houses_by_zone(zone):
-    if find_zone(zone) is None:
-        return 0
-
+def houses_by_zone():
     ordered_data = data.sort_values(by=['zone'])
 
     ordered_data = ordered_data.drop(
@@ -91,7 +88,7 @@ def houses_by_zone(zone):
          'index',
          ], axis=1)
 
-    return ordered_data['zone'].value_counts().to_dict().get(zone)
+    return ordered_data['zone'].value_counts().to_dict().items()
 
 
 def avg_price_by_zone(range, top):

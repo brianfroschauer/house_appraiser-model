@@ -23,9 +23,9 @@ def prices():
 
 @app.route('/houses', methods=['GET'])
 def houses():
-    zone = request.args.get('zone')
-    count = houses_by_zone(zone)
-    return jsonify(zone=zone, amount=count)
+    print(houses_by_zone())
+    result = list(map(lambda t: {"zone": t[0], 'amount': int(t[1])}, houses_by_zone()))
+    return jsonify(result)
 
 
 @app.route('/zones', methods=['GET'])
