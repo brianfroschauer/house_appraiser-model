@@ -113,3 +113,26 @@ def avg_price_by_zone(range, top):
     ordered_data = ordered_data.sort_values(by='price', ascending=False if range == 'asc' else True).head(top)
 
     return [tuple(x) for x in ordered_data.to_numpy()]
+
+
+def avg_price_by_bathrooms():
+    ordered_data = data.sort_values(by=['bathrooms'])
+
+    ordered_data = ordered_data.drop(
+        ['covered_surface',
+         'total_surface',
+         'rooms',
+         'zone',
+         'garages',
+         'bedrooms',
+         'toilettes',
+         'antiquity',
+         'zone_label',
+         'index',
+         ], axis=1)
+
+    ordered_data = ordered_data.groupby(['bathrooms']).mean().reset_index()
+    ordered_data['price'] = ordered_data['price'].astype(int)
+    ordered_data = ordered_data.sort_values(by='price', ascending=False)
+
+    return [tuple(x) for x in ordered_data.to_numpy()]

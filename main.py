@@ -2,7 +2,8 @@ from flask import Flask, jsonify, request
 
 from flask_cors import CORS
 
-from model import predict, find_zone, find_all_zones, price_by_total_surface, houses_by_zone, avg_price_by_zone
+from model import predict, find_zone, find_all_zones, price_by_total_surface,\
+    houses_by_zone, avg_price_by_zone,avg_price_by_bathrooms
 
 app = Flask(__name__)
 CORS(app)
@@ -38,6 +39,12 @@ def price_by_zone():
     range = request.args.get('range')
     top = int(request.args.get('top'))
     result = list(map(lambda t: {'zone': t[0], 'average_price': int(t[1])}, avg_price_by_zone(range, top)))
+    return jsonify(result)
+
+
+@app.route('/prices/by-bathrooms', methods=['GET'])
+def price_by_bathrooms():
+    result = list(map(lambda t: {'bathrooms': int(t[0]), 'average_price': int(t[1])}, avg_price_by_bathrooms()))
     return jsonify(result)
 
 
