@@ -1,24 +1,28 @@
 from flask import Flask, jsonify, request
 
-# Data analysis modules
-import pandas as pd
 from flask_cors import CORS
 
-from sklearn.model_selection import train_test_split
-
-# Fit model modules
-from sklearn.linear_model import LinearRegression
+from model import predict, find_zone, find_all_zones, price_by_total_surface
 
 app = Flask(__name__)
 CORS(app)
 
-zone_dict = {}
+
+@app.route('/zones', methods=['GET'])
+def all_zones():
+    surface = request.args.get('surface')
+
+    if surface is None:
+        return jsonify(zones=find_all_zones())
+
+    surface = surface + '_surface'
+
+    result = list(map(lambda t: {surface: int(t[0]), 'average_price': int(t[1])}, price_by_total_surface(surface)))
+    return jsonify(result)
 
 
 @app.route('/predict', methods=['POST'])
 def linear_regression():
-    model = train_model()
-
     total_surface = request.json['total_surface']
     covered_surface = request.json['covered_surface']
     rooms = request.json['rooms']
@@ -27,51 +31,12 @@ def linear_regression():
     bedrooms = request.json['bedrooms']
     toilettes = request.json['toilettes']
     antiquity = request.json['antiquity']
-    zone = zone_dict.get(request.json['zone'])
+    zone = find_zone(request.json['zone'])
 
     if zone is None:
         return jsonify(error="Zone, " + request.json['zone'] + ", is not found")
 
     feature = [[total_surface, covered_surface, rooms, bathrooms, garages, bedrooms, toilettes, antiquity, zone]]
+    prediction = predict(feature)
 
-    prediction = model.predict(feature)[0]
-
-    return jsonify(price=round(prediction))
-
-
-def train_model():
-    train = pd.read_csv('./dataset/dataset.csv')
-
-    init_zone_dict(train)
-
-    # Split dataset into “x” features and “y” labels
-    x = train[[
-        'total_surface',
-        'covered_surface',
-        'rooms',
-        'bathrooms',
-        'garages',
-        'bedrooms',
-        'toilettes',
-        'antiquity',
-        'zone_label'
-    ]]
-
-    y = train['price']
-
-    x_train, x_test, y_train, y_test = train_test_split(x, y)
-
-    # Create instance of LogisticRegression
-    model = LinearRegression()
-
-    # Fit the model using the training data
-    # X_train -> parameter supplies the data features
-    # y_train -> parameter supplies the target labels
-    model.fit(x_train, y_train)
-
-    return model
-
-
-def init_zone_dict(train):
-    for i in range(len(train)):
-        zone_dict[train['zone'][i]] = train['zone_label'][i]
+    return jsonify(price=prediction)
