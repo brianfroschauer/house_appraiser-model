@@ -36,6 +36,8 @@ x_train, x_test, y_train, y_test = train_test_split(x, y)
 # y_train -> parameter supplies the target labels
 clf.fit(x_train, y_train)
 
+TOP = 250000
+
 
 def predict(feature):
     return round(clf.predict(feature)[0])
@@ -116,7 +118,7 @@ def avg_price_by_zone(range, top):
 
 def price_by_zone():
     ordered_data = data.sort_values(by=['zone'])
-    classes = 4
+    classes = 3
 
     ordered_data = ordered_data.drop(
         ['covered_surface',
@@ -137,7 +139,6 @@ def price_by_zone():
 
 
 def classify(price, classes):
-    TOP = 250000
     for index in range(classes):
         if price <= TOP * (index + 1):
             return index
