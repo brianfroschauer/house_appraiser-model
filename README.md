@@ -104,7 +104,7 @@ Response example:
 
 Method: GET
 
-URL: http://127.0.0.1:5000/prices/by-zone
+URL: http://127.0.0.1:5000/prices/by-zone/average
 
 Params:
 1. range: ['asc', 'desc']
@@ -141,5 +141,27 @@ Response example:
     "zone": 3,
 	"average_price": 300000
   }
+]
+```
+
+#### Prices by zone
+
+Method: GET
+
+URL: http://127.0.0.1:5000/prices/by-zone/average
+
+Response example:
+```json
+[
+    {
+        "amount": 22,
+        "class": 0,
+        "zone": "Almirante Brown"
+    },
+    {
+        "amount": 23,
+        "class": 1,
+        "zone": "Almirante Brown"
+    }
 ]
 ```

@@ -36,6 +36,8 @@ x_train, x_test, y_train, y_test = train_test_split(x, y)
 # y_train -> parameter supplies the target labels
 clf.fit(x_train, y_train)
 
+TOP = 250000
+
 
 def predict(feature):
     return round(clf.predict(feature)[0])
@@ -92,7 +94,6 @@ def houses_by_zone():
 
 
 def avg_price_by_zone(range, top):
-
     ordered_data = data.sort_values(by=['zone'])
 
     ordered_data = ordered_data.drop(
@@ -113,6 +114,51 @@ def avg_price_by_zone(range, top):
     ordered_data = ordered_data.sort_values(by='price', ascending=False if range == 'asc' else True).head(top)
 
     return [tuple(x) for x in ordered_data.to_numpy()]
+
+
+def price_by_zone():
+    ordered_data = data.sort_values(by=['zone'])
+    classes = 3
+
+    ordered_data = ordered_data.drop(
+        ['covered_surface',
+         'total_surface',
+         'rooms',
+         'bathrooms',
+         'garages',
+         'bedrooms',
+         'toilettes',
+         'antiquity',
+         'zone_label',
+         'index',
+         ], axis=1)
+
+    ordered_data['class'] = ordered_data['price'].apply(lambda price: classify(price, classes))
+    ordered_data = ordered_data.groupby(['zone', 'class']).count().reset_index()
+    return parse_json(ordered_data)
+
+
+def classify(price, classes):
+    for index in range(classes):
+        if price <= TOP * (index + 1):
+            return index
+
+    return classes
+
+
+def parse_json(data):
+    result = {}
+    for index, row in data.iterrows():
+        zone = row['zone']
+        content = {'class': row['class'], 'value': row['price']}
+        if zone in result:
+            result[zone]['series'].append(content)
+            result[zone]['total'] += row['price']
+        else:
+            zone_content = {'series': [content], 'total': row['price']}
+            result[zone] = zone_content
+
+    return result
 
 
 def avg_price_by_bathrooms():
