@@ -150,7 +150,7 @@ def parse_json(data):
     result = {}
     for index, row in data.iterrows():
         zone = row['zone']
-        content = {'class': row['class'], 'value': row['price']}
+        content = {'name': row['class'], 'value': row['price']}
         if zone in result:
             result[zone]['series'].append(content)
             result[zone]['total'] += row['price']
