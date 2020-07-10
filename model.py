@@ -44,7 +44,9 @@ def predict(feature):
 
 
 def find_all_zones():
-    return [*zones]
+    result = [*zones]
+    result.sort()
+    return result
 
 
 def find_zone(zone):
